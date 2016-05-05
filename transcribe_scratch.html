@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<style>
+audio { width: 50%; }
+</style>
+
+<meta charset="UTF-8">
+<title>Transcription</title>
+
+<style type="text/css"></style><link rel="stylesheet" type="text/css"></head><body><h3>Transcription Tool</h3>
+
+<script type="text/javascript">
+function insertText(val,e){
+document.getElementById(e).innerHTML+=val;
+  }
+</script>
+<script src="ckeditor/ckeditor.js"> </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"> </script>
+<script src="https://cdn.jsdelivr.net/garlic.js/1.2.2/garlic.min.js"> </script>
+
+<p>
+To begin, upload an audio file and click into the textbox. <br><br>
+Then:<br>	
+Press TAB to start or stop. <br>
+Press Esc to rewind 4 seconds and ` to skip forward 4 seconds. <br>
+Press Enter when the other person starts talking. <br>
+Hold Shift while pressing Enter to return without a timestamp. <br>
+Press [ to slow down playback. <br>
+Press ] to speed it up.</p>
+
+<input id="audio_file" type="file" accept="audio/*">
+<br><br>
+<audio id="audio_player" controls=""></audio>
+<br><br>
+<br>
+Speaker 1 
+<br>
+<textarea id="speaker1" cols="12" rows="1">Maxim</textarea>
+Specify a Key <textarea id="speaker1key" cols="1" rows="1">=</textarea> 
+<br><br>
+ 
+Speaker 2
+<br>
+<textarea id="speaker2" cols="12" rows="1">Obama</textarea>
+Specify a Key <textarea id="speaker2key" cols="1" rows="1">\</textarea>
+<br><br>
+Transcribe here:
+<form>
+<p><textarea id="textbox1" cols="80" rows="15" data-persist="garlic" method="POST"></textarea></p>
+
+<script>
+CKEDITOR.config.toolbar_Simple = [ ['Bold','Italic'] ];
+CKEDITOR.replace( 'textbox1');
+CKEDITOR.instances.embMessageText.on('key', function(event) { alert('HELLO'); });
+
+
+CKEDITOR.on('instanceCreated', function (e) {
+			e.editor.on('contentDom', function () {
+				var editor_copy = e.editor;
+				e.editor.document.on('keydown', function (event) {
+					// keyup event in ckeditor 
+					var key = event.data.getKey();
+					var valueText = $('<div>' + editor_copy.getData() + '</div>').text();
+						if (key == "8") {
+						alert('HELLO');
+						//var prevchar = valueText.charAt(valueText.length - 1);
+							if (prevchar == "*") {
+							return false;
+							}
+						  }
+						return true;
+					});
+				});
+			});
+
+</script>
+
+</form>
+
+
+
+</body></html>

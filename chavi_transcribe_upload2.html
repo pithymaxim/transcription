@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<style>
+audio { width: 50%; }
+</style>
+
+<meta charset="UTF-8" />
+<title>Transcription</title>
+
+<h3>Transcription Tool</h3>
+
+<script type="text/javascript">
+function insertText(val,e){
+document.getElementById(e).innerHTML+=val;
+  }
+</script>
+
+</head>
+<body>
+<p>Press TAB to start or stop.</p>
+<p>Press Esc to rewind 4 seconds.</p>
+<p>Press Enter when the other person starts talking.</p>
+<p>Press [ to slow down playback.</p>
+<p>Press ] to speed it up.</p>
+
+<input id="audio_file" type="file" accept="audio/*">
+<!-- <audio controls id="myAudio" preload="auto" src="Geraldine.mp3">&nbsp;</audio><br> -->
+<br><br>
+<audio id="audio_player" controls></audio>
+<br><br>
+
+Speaker 1 (Press = in textbox)
+<br>
+<textarea id="speaker1" cols="12" rows="1"></textarea>
+<br>
+Speaker 2 (Press \ in textbox)
+<br>
+<textarea id="speaker2" cols="12" rows="1"></textarea>
+<br><br>
+Transcribe here:
+
+<p><textarea id="textbox1" cols="80" rows="15"></textarea></p>
+</body>
+
+
+<script type="text/javascript">
+audio_file.onchange = function(){
+var files = this.files;
+var file = URL.createObjectURL(files[0]); 
+audio_player.src = file;
+
+};
+</script> 
+
+<script type="text/javascript">
+window.onkeydown = checkKey;
+window.onkeyup = checkKeyUp;
+var person_number = 2;
+
+function isPlaying(audelem) { return !audelem.paused; }
+
+function add(text){
+    var TheTextBox = document.getElementById("textbox1");
+    TheTextBox.value = TheTextBox.value + text;
+}
+
+//had to put this part on key up so that 
+//the default action, carriage return, would
+//still happen. 
+function checkKeyUp(e) {
+  e = e || window.event;
+  var myAudio = document.getElementById("audio_player");
+    if (e.keyCode == '13') { //return
+      var minutes = Math.floor(myAudio.currentTime / 60);
+      var seconds = Math.floor(myAudio.currentTime) - minutes*60;
+      if (seconds.toString().length == 1) {
+        add(minutes.toString() + ":0"+seconds.toString() + " ");
+      }
+      else {
+        add(minutes.toString() + ":"+seconds.toString() +" ");
+      }
+     }
+}
+function checkKey(e) {
+  var myAudio = document.getElementById("audio_player");
+  var speaker1 = document.getElementById('speaker1').value;
+  var speaker2 = document.getElementById('speaker2').value;
+  
+    e = e || window.event;
+
+    if (e.keyCode == '9') { // tab
+      e.preventDefault();
+        if (isPlaying(myAudio)) {
+          myAudio.pause()
+        }
+        else {
+          myAudio.play()
+        }
+
+    }
+    if (e.keyCode == '27') { // esc
+      e.preventDefault();
+      myAudio.currentTime -= 4;
+    }
+
+    if (e.keyCode == '219') { // [
+       e.preventDefault();
+       myAudio.playbackRate -= .3;
+       }
+
+    if (e.keyCode == '221') { // ]
+       e.preventDefault();
+       myAudio.playbackRate += .3;
+       }
+    if (e.keyCode == '187') { // =
+      e.preventDefault();
+      add(speaker1+": ");
+    }
+    if (e.keyCode == '220') { // \
+      e.preventDefault();
+      add(speaker2+": ");
+    }
+
+}
+</script>
+
+</html>
